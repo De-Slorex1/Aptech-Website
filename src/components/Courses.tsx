@@ -72,7 +72,7 @@ export default function Courses() {
           </h2>
 
           <p className="text-slate-600 text-lg">
-            Whether you're starting from scratch or leveling up, we provide structured
+            Whether you&apos;re starting from scratch or leveling up, we provide structured
             programs designed to take you from beginner to job-ready.
           </p>
         </div>
