@@ -49,7 +49,7 @@ export default function Navbar() {
   ];
 
   const navLinks: { name: string; href: string }[] = [
-    { name: "Blogs", href: "/blog" },
+    // { name: "Blogs", href: "/blog" },
     { name: "Gallery", href: "/gallery" },
     { name: "About us", href: "/about" },
     { name: "Contact us", href: "/contact" },

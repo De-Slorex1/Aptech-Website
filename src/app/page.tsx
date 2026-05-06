@@ -4,6 +4,7 @@ import Courses from '@/components/Courses';
 import SuccessSection from '@/components/testimonial';
 import GlobalAlliance from '@/components/affilation';
 import CallToAction from '@/components/CallToAction';
+import CentersSection from '@/components/centerSections';
 
 export default function HomePage() {
   return (
@@ -11,6 +12,7 @@ export default function HomePage() {
       <Hero />
       <TrustSection />
       <Courses />
+      <CentersSection />
       <SuccessSection />
       <GlobalAlliance />
       <CallToAction />
