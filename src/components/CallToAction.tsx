@@ -34,7 +34,7 @@ export default function CallToAction() {
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-brand-tertiary text-white px-10 py-5 rounded-2xl text-lg font-bold hover:bg-brand-tertiary/90 focus-visible:ring-4 focus-visible:ring-brand-tertiary focus-visible:ring-offset-2 transition-all hover:scale-105"
               aria-label="Apply Now for Aptech Programs"
             >
-              Apply Now
+              Enroll now
               <ArrowRight className="w-5 h-5" aria-hidden="true" />
             </a>
             <a

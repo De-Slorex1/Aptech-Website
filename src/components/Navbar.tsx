@@ -17,6 +17,11 @@ export default function Navbar() {
   const isHome = pathname === "/";
   const isSolid = scrolled || isOpen || !isHome;
 
+  // 🔥 ACTIVE HELPERS
+  const isActive = (href: string) => pathname === href;
+  const isCourseActive = (slug: string) =>
+    pathname === `/courses/${slug}`;
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -25,24 +30,26 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-  
-type Course = {
-  name: string;
-  slug: string;
-};
 
-const courses: Course[] = [
-  { name: "Advanced Diploma in Software Engineering", slug: "adse" },
-  { name: "Advanced Diploma in Multimedia", slug: "multimedia" },
-  { name: "Aptech Certified Network Specialist", slug: "networking" },
-  { name: "Arena Multimedia Specialist Program", slug: "arena" },
-  { name: "Skill Builders & Smart Professional", slug: "smart-pro" },
-  { name: "Certified Ethical Hacking", slug: "ethical-hacking" },
-  { name: "JAPA Courses", slug: "japa" },
-];
+  type Course = {
+    name: string;
+    slug: string;
+  };
+
+  const courses: Course[] = [
+    { name: "Advanced Diploma in Software Engineering", slug: "adse" },
+    { name: "Arena Multimedia Specialist Program", slug: "amsp" },
+    { name: "Arena Skill Builders & Smart Professional", slug: "arenasmartpro" },
+    { name: "Arena Realtime 3D & Game Art", slug: "realtime3d" },
+    { name: "Arena VFX For Animation & Films", slug: "vfx" },
+    { name: "Aptech Certified Network Specialist", slug: "acns" },
+    { name: "Skill Builders & Smart Professional", slug: "smartstack" },
+    { name: "Certified Ethical Hacking", slug: "ethical-hacking" },
+    { name: "JAPA Courses", slug: "japa" }
+  ];
 
   const navLinks: { name: string; href: string }[] = [
-    { name: "Blogs", href: "/blogs" },
+    { name: "Blogs", href: "/blog" },
     { name: "Gallery", href: "/gallery" },
     { name: "About us", href: "/about" },
     { name: "Contact us", href: "/contact" },
@@ -52,14 +59,16 @@ const courses: Course[] = [
     <nav
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 py-4",
-        isSolid ? "bg-white/90 backdrop-blur-md shadow-sm py-3" : "bg-transparent"
+        isSolid
+          ? "bg-[#0b1220]/80 backdrop-blur-md border-b border-red-500/10 shadow-[0_0_25px_rgba(239,68,68,0.08)] py-3"
+          : "bg-transparent"
       )}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
 
         {/* Logo */}
         <Link href="/" className="group">
-          <Image src='/logo.png' alt="Logo" width={120} height={40} />
+          <Image src="/logo.png" alt="Logo" width={120} height={40} />
         </Link>
 
         {/* Desktop Nav */}
@@ -69,8 +78,10 @@ const courses: Course[] = [
           <Link
             href="/"
             className={cn(
-              "text-sm font-medium transition-colors hover:text-brand-tertiary",
-              isSolid ? "text-slate-600" : "text-white"
+              "text-sm font-medium transition-all",
+              isActive("/")
+                ? "text-red-400 border-b border-red-500/60 shadow-[0_2px_10px_rgba(239,68,68,0.25)]"
+                : "text-white hover:text-red-400"
             )}
           >
             Home
@@ -85,7 +96,9 @@ const courses: Course[] = [
             <button
               className={cn(
                 "flex items-center gap-1 text-sm font-medium transition-colors",
-                isSolid ? "text-slate-600" : "text-white"
+                pathname.startsWith("/courses")
+                  ? "text-red-400"
+                  : "text-white hover:text-red-400"
               )}
             >
               Courses
@@ -99,18 +112,29 @@ const courses: Course[] = [
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute top-full left-0 mt-4 w-[320px] bg-white rounded-2xl shadow-xl border border-slate-100 p-4"
+                  className="
+                    absolute top-full left-0 mt-4 w-[320px]
+                    bg-[#0b1220]/95 backdrop-blur-md
+                    rounded-2xl
+                    shadow-[0_0_30px_rgba(239,68,68,0.10)]
+                    border border-red-500/10 p-4
+                  "
                 >
                   <div className="flex flex-col gap-2">
-                     {courses.map((course, i) => (
-                        <Link
-                          key={i}
-                          href={`/courses/${course.slug}`}
-                          className="text-sm text-slate-700 hover:text-brand-tertiary transition-colors px-3 py-2 rounded-lg hover:bg-slate-50"
-                        >
-                          {course.name}
-                        </Link>
-                      ))}
+                    {courses.map((course, i) => (
+                      <Link
+                        key={i}
+                        href={`/courses/${course.slug}`}
+                        className={cn(
+                          "text-sm px-3 py-2 rounded-lg transition-all",
+                          isCourseActive(course.slug)
+                            ? "text-red-300 bg-red-500/10 border border-red-500/30 shadow-[0_0_12px_rgba(239,68,68,0.15)]"
+                            : "text-white/80 hover:text-red-300 hover:bg-red-500/5"
+                        )}
+                      >
+                        {course.name}
+                      </Link>
+                    ))}
                   </div>
                 </motion.div>
               )}
@@ -123,8 +147,10 @@ const courses: Course[] = [
               key={link.name}
               href={link.href}
               className={cn(
-                "text-sm font-medium transition-colors hover:text-brand-tertiary",
-                isSolid ? "text-slate-600" : "text-white"
+                "text-sm font-medium transition-all",
+                isActive(link.href)
+                  ? "text-red-400 border-b border-red-500/60 shadow-[0_2px_10px_rgba(239,68,68,0.25)]"
+                  : "text-white hover:text-red-400"
               )}
             >
               {link.name}
@@ -136,7 +162,15 @@ const courses: Course[] = [
             href="https://wa.me/2347070491555"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-brand-tertiary text-black px-6 py-2.5 rounded-full text-sm font-bold hover:bg-brand-tertiary/90 transition-all hover:scale-105 shadow-lg shadow-brand-tertiary/20"
+            className="
+              inline-flex items-center gap-2
+              bg-red-600 hover:bg-red-500
+              text-white px-6 py-2.5 rounded-full text-sm font-bold
+              shadow-[0_0_20px_rgba(239,68,68,0.25)]
+              border border-red-500/30
+              hover:shadow-[0_0_30px_rgba(239,68,68,0.35)]
+              transition-all hover:scale-105
+            "
           >
             Enroll now
           </a>
@@ -144,10 +178,7 @@ const courses: Course[] = [
 
         {/* Mobile Toggle */}
         <button
-          className={cn(
-            "md:hidden p-2 rounded-lg",
-            isSolid ? "text-black" : "text-white"
-          )}
+          className="md:hidden p-2 rounded-lg text-white"
           onClick={() => setIsOpen(!isOpen)}
         >
           {isOpen ? <X /> : <Menu />}
@@ -161,19 +192,29 @@ const courses: Course[] = [
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="md:hidden bg-white mt-4 rounded-2xl shadow-xl p-6"
+            className="
+              md:hidden mt-4 rounded-2xl p-6
+              bg-[#0b1220]/95 backdrop-blur-md
+              border border-red-500/10
+              shadow-[0_0_25px_rgba(239,68,68,0.08)]
+            "
           >
             <div className="flex flex-col gap-4">
 
               <div>
-                <p className="font-bold text-brand-primary mb-2">Courses</p>
+                <p className="font-bold text-red-300 mb-2">Courses</p>
                 <div className="flex flex-col gap-2">
                   {courses.map((course, i) => (
                     <Link
                       key={i}
                       href={`/courses/${course.slug}`}
-                      className="text-sm text-slate-600"
                       onClick={() => setIsOpen(false)}
+                      className={cn(
+                        "text-sm transition-all",
+                        isCourseActive(course.slug)
+                          ? "text-red-300"
+                          : "text-white/70 hover:text-red-300"
+                      )}
                     >
                       {course.name}
                     </Link>
@@ -186,7 +227,12 @@ const courses: Course[] = [
                   key={link.name}
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className="text-lg font-semibold text-slate-800"
+                  className={cn(
+                    "text-lg font-semibold transition-all",
+                    isActive(link.href)
+                      ? "text-red-400"
+                      : "text-white hover:text-red-400"
+                  )}
                 >
                   {link.name}
                 </Link>
@@ -194,7 +240,11 @@ const courses: Course[] = [
 
               <a
                 href="https://wa.me/2347070491555"
-                className="bg-brand-tertiary text-white py-3 rounded-xl text-center font-bold"
+                className="
+                  bg-red-600 hover:bg-red-500
+                  text-white py-3 rounded-xl text-center font-bold
+                  shadow-[0_0_20px_rgba(239,68,68,0.25)]
+                "
               >
                 Enroll now
               </a>
