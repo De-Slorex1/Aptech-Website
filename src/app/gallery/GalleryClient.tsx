@@ -1,8 +1,20 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Award, Image as ImageIcon, Maximize2, Play, Sparkles, X } from "lucide-react";
-import { useState } from "react";
+import Image from "next/image";
+import { useMemo, useState } from "react";
+import {
+  Award,
+  Camera,
+  ChevronLeft,
+  ChevronRight,
+  Film,
+  Grid3X3,
+  Maximize2,
+  Play,
+  Sparkles,
+  X,
+} from "lucide-react";
 
 type GalleryItem = {
   title: string;
@@ -17,13 +29,13 @@ const galleryItems: GalleryItem[] = [
     title: "Aptech Center Moment",
     category: "Campus Life",
     image: "/aptech1.jpeg",
-    height: "h-[320px]",
+    height: "h-[330px]",
   },
   {
     title: "Student Achievement Highlight",
     category: "Achievement",
     image: "/aptech2.jpeg",
-    height: "h-[410px]",
+    height: "h-[430px]",
   },
   {
     title: "Learning in Action",
@@ -35,11 +47,11 @@ const galleryItems: GalleryItem[] = [
     title: "Center Showcase",
     category: "Community",
     image: "/aptech4.jpeg",
-    height: "h-[330px]",
+    height: "h-[340px]",
   },
   {
     title: "Student Moment",
-    category: "Milestone",
+    category: "Campus Life",
     image: "/aptech5.jpeg",
     height: "h-[360px]",
   },
@@ -47,26 +59,26 @@ const galleryItems: GalleryItem[] = [
     title: "Aptech Experience",
     category: "Success",
     image: "/aptech6.jpeg",
-    height: "h-[520px]",
+    height: "h-[420px]",
   },
   {
     title: "Center Highlight Reel",
-    category: "Video Moment",
+    category: "Video",
     image: "/aptech7.MOV",
-    height: "h-[440px]",
+    height: "h-[450px]",
     mediaType: "video",
   },
   {
     title: "Center Memory",
-    category: "Student Life",
+    category: "Campus Life",
     image: "/aptech8.jpeg",
     height: "h-[430px]",
   },
   {
     title: "Achievement Moment",
-    category: "Milestone",
+    category: "Achievement",
     image: "/aptech9.jpeg",
-    height: "h-[350px]",
+    height: "h-[360px]",
   },
   {
     title: "Learning Community",
@@ -78,7 +90,7 @@ const galleryItems: GalleryItem[] = [
     title: "Aptech Showcase",
     category: "Center Life",
     image: "/aptech11.jpeg",
-    height: "h-[390px]",
+    height: "h-[400px]",
   },
   {
     title: "Student Success Story",
@@ -89,131 +101,246 @@ const galleryItems: GalleryItem[] = [
 ];
 
 const stats = [
+  { value: "12", label: "Featured moments" },
+  { value: "2", label: "Ibadan centers" },
   { value: "2K+", label: "Students trained" },
-  { value: "10+", label: "Global certifications" },
-  { value: "50+", label: "Industry partners" },
 ];
 
+const categories = ["All", "Campus Life", "Achievement", "Training", "Community", "Video"];
+
 export default function GalleryClient() {
-  const [activeItem, setActiveItem] = useState<GalleryItem | null>(null);
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  const filteredItems = useMemo(() => {
+    if (activeCategory === "All") return galleryItems;
+    return galleryItems.filter((item) => item.category === activeCategory);
+  }, [activeCategory]);
+
+  const activeItem =
+    activeIndex === null ? null : filteredItems[activeIndex] ?? null;
+
+  const openItem = (index: number) => setActiveIndex(index);
+
+  const showPrevious = () => {
+    setActiveIndex((current) => {
+      if (current === null) return current;
+      return current === 0 ? filteredItems.length - 1 : current - 1;
+    });
+  };
+
+  const showNext = () => {
+    setActiveIndex((current) => {
+      if (current === null) return current;
+      return current === filteredItems.length - 1 ? 0 : current + 1;
+    });
+  };
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-brand-primary pt-32 pb-24 text-white">
-      <div
-        className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(242,22,7,0.18),_transparent_34%),radial-gradient(circle_at_bottom_left,_rgba(79,70,229,0.16),_transparent_30%)]"
-        aria-hidden="true"
-      />
-      <div
-        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-tertiary/70 to-transparent"
-        aria-hidden="true"
-      />
+    <>
+      <section className="relative min-h-[84vh] overflow-hidden bg-brand-primary pt-32 text-white">
+        <Image
+          src="/aptech12.jpeg"
+          alt="Aptech Ibadan student achievement moment"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div
+          className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.88),rgba(0,0,0,0.58)_48%,rgba(0,0,0,0.16)),linear-gradient(180deg,rgba(0,0,0,0.34),rgba(0,0,0,0.84))]"
+          aria-hidden="true"
+        />
+        <div
+          className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-slate-50 to-transparent"
+          aria-hidden="true"
+        />
 
-      <div className="relative z-10 max-w-[88rem] mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55 }}
-          className="mb-14 grid gap-10 lg:grid-cols-[1fr_420px] lg:items-end"
-        >
-          <div>
+        <div className="relative z-10 mx-auto grid min-h-[calc(84vh-8rem)] max-w-7xl gap-12 px-6 pb-24 lg:grid-cols-[1fr_430px] lg:items-center">
+          <motion.div
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55 }}
+          >
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-sm text-white/80 backdrop-blur">
-              <Sparkles className="h-4 w-4 text-brand-tertiary" />
+              <Sparkles className="h-4 w-4 text-brand-accent" />
               Aptech Ibadan Gallery
             </div>
 
             <h1 className="max-w-4xl text-5xl font-bold leading-tight text-white lg:text-7xl">
-              Moments &{" "}
-              <span className="relative inline-block text-brand-tertiary">
-                Achievements
-                <span className="absolute -bottom-2 left-0 h-1 w-24 rounded-full bg-brand-tertiary" />
-              </span>
+              Student life, wins, and center moments.
             </h1>
 
-            <p className="mt-8 max-w-2xl text-lg leading-relaxed text-white/70">
-              A living showcase of student wins, practical sessions, project
-              presentations, certification milestones, and the learning culture
-              across our centers.
+            <p className="mt-7 max-w-2xl text-lg leading-relaxed text-white/70">
+              A curated look at practical sessions, achievement highlights,
+              learning culture, and memorable moments across Aptech Ibadan.
             </p>
-          </div>
 
-          <div className="grid grid-cols-3 gap-3 rounded-[2rem] border border-white/10 bg-white/[0.04] p-4 backdrop-blur">
-            {stats.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <p className="text-2xl font-bold text-brand-tertiary">
-                  {stat.value}
-                </p>
-                <p className="mt-1 text-xs leading-snug text-white/55">
-                  {stat.label}
+            <div className="mt-10 grid max-w-xl grid-cols-3 gap-3">
+              {stats.map((stat) => (
+                <div
+                  key={stat.label}
+                  className="rounded-lg border border-white/10 bg-white/10 p-4 backdrop-blur"
+                >
+                  <p className="text-3xl font-bold text-brand-accent">
+                    {stat.value}
+                  </p>
+                  <p className="mt-1 text-xs font-semibold text-white/65">
+                    {stat.label}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.08 }}
+            className="hidden lg:grid grid-cols-2 gap-4"
+          >
+            <div className="relative h-[360px] overflow-hidden rounded-lg border border-white/10 bg-white/10">
+              <Image
+                src="/aptech3.jpeg"
+                alt="Aptech Ibadan practical learning session"
+                fill
+                sizes="25vw"
+                className="object-cover"
+              />
+            </div>
+            <div className="grid gap-4 pt-14">
+              <div className="relative h-[170px] overflow-hidden rounded-lg border border-white/10 bg-white/10">
+                <Image
+                  src="/aptech10.jpeg"
+                  alt="Aptech Ibadan learning community"
+                  fill
+                  sizes="25vw"
+                  className="object-cover"
+                />
+              </div>
+              <div className="rounded-lg border border-white/10 bg-white p-5 text-slate-950 shadow-2xl shadow-black/25">
+                <Camera className="mb-4 h-7 w-7 text-brand-tertiary" />
+                <p className="text-2xl font-bold">Real center stories</p>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                  Training, showcases, community events, and student milestones.
                 </p>
               </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="bg-slate-50 py-24 text-slate-950">
+        <div className="mx-auto max-w-[88rem] px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true, margin: "-80px" }}
+            className="mb-10 grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end"
+          >
+            <div>
+              <p className="mb-4 text-sm font-bold uppercase text-brand-tertiary">
+                Gallery
+              </p>
+              <h2 className="max-w-3xl text-4xl font-bold leading-tight lg:text-5xl">
+                Explore the Aptech Ibadan experience.
+              </h2>
+            </div>
+
+            <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white p-2 shadow-xl shadow-slate-200/70">
+              <Grid3X3 className="hidden h-5 w-5 text-brand-tertiary sm:block" />
+              <span className="text-sm font-bold text-slate-600">
+                {filteredItems.length} items
+              </span>
+            </div>
+          </motion.div>
+
+          <div className="mb-10 flex gap-2 overflow-x-auto border-y border-slate-200 py-4">
+            {categories.map((category) => {
+              const isActive = activeCategory === category;
+
+              return (
+                <button
+                  key={category}
+                  type="button"
+                  onClick={() => {
+                    setActiveCategory(category);
+                    setActiveIndex(null);
+                  }}
+                  className={`shrink-0 rounded-lg px-4 py-2 text-sm font-bold transition ${
+                    isActive
+                      ? "bg-brand-tertiary text-white shadow-lg shadow-brand-tertiary/20"
+                      : "bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+                  }`}
+                >
+                  {category}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="columns-1 gap-6 md:columns-2 xl:columns-3">
+            {filteredItems.map((item, index) => (
+              <motion.button
+                key={`${item.title}-${activeCategory}`}
+                type="button"
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: (index % 4) * 0.05 }}
+                viewport={{ once: true, margin: "-80px" }}
+                onClick={() => openItem(index)}
+                className="group relative mb-6 block w-full break-inside-avoid overflow-hidden rounded-lg border border-slate-200 bg-white text-left shadow-xl shadow-slate-200/80 transition hover:-translate-y-1 hover:shadow-2xl hover:shadow-slate-300/80"
+                aria-label={`View ${item.title}`}
+              >
+                <div className={`relative ${item.height} bg-slate-200`}>
+                  {item.mediaType === "video" ? (
+                    <video
+                      src={item.image}
+                      className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                      muted
+                      loop
+                      playsInline
+                      autoPlay
+                      preload="metadata"
+                      aria-label={item.title}
+                    />
+                  ) : (
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 100vw"
+                      className="object-cover transition duration-700 group-hover:scale-105"
+                    />
+                  )}
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent opacity-90 transition group-hover:opacity-95" />
+
+                  <div className="absolute left-4 top-4 rounded-lg bg-white/90 px-3 py-1 text-xs font-bold text-slate-950 shadow-lg backdrop-blur">
+                    {item.category}
+                  </div>
+
+                  <div className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-lg bg-black/45 text-white opacity-0 backdrop-blur transition group-hover:opacity-100">
+                    {item.mediaType === "video" ? (
+                      <Play className="h-4 w-4 fill-white" />
+                    ) : (
+                      <Maximize2 className="h-4 w-4" />
+                    )}
+                  </div>
+
+                  <div className="absolute inset-x-0 bottom-0 p-5">
+                    <div className="mb-3 h-px w-full bg-white/20" />
+                    <h3 className="text-xl font-bold text-white">
+                      {item.title}
+                    </h3>
+                  </div>
+                </div>
+              </motion.button>
             ))}
           </div>
-        </motion.div>
-
-        <div className="mb-8 flex items-center gap-3 border-y border-white/10 py-4 text-white/65">
-          <ImageIcon className="h-5 w-5 text-brand-tertiary" />
-          <p className="text-sm font-medium uppercase tracking-[0.28em]">
-            Student life, center events, and success stories
-          </p>
         </div>
-
-        <div className="columns-1 gap-6 md:columns-2 xl:columns-3">
-          {galleryItems.map((item, index) => (
-            <motion.button
-              key={item.title}
-              type="button"
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: (index % 4) * 0.06 }}
-              viewport={{ once: true, margin: "-80px" }}
-              onClick={() => setActiveItem(item)}
-              className="group relative mb-6 block w-full break-inside-avoid overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] text-left shadow-2xl shadow-black/20"
-              aria-label={`View ${item.title}`}
-            >
-              {item.mediaType === "video" ? (
-                <video
-                  src={item.image}
-                  className={`${item.height} w-full object-cover transition duration-700 group-hover:scale-105`}
-                  muted
-                  loop
-                  playsInline
-                  autoPlay
-                  preload="metadata"
-                  aria-label={item.title}
-                />
-              ) : (
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className={`${item.height} w-full object-cover transition duration-700 group-hover:scale-105`}
-                  loading={index < 4 ? "eager" : "lazy"}
-                />
-              )}
-
-              <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent opacity-80 transition duration-300 group-hover:opacity-90" />
-
-              <div className="absolute left-4 top-4 rounded-lg bg-black/45 px-3 py-1 text-xs font-semibold text-white/85 backdrop-blur">
-                {item.category}
-              </div>
-
-              <div className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-xl bg-black/35 text-white opacity-0 backdrop-blur transition group-hover:opacity-100">
-                {item.mediaType === "video" ? (
-                  <Play className="h-4 w-4" />
-                ) : (
-                  <Maximize2 className="h-4 w-4" />
-                )}
-              </div>
-
-              <div className="absolute inset-x-0 bottom-0 p-5">
-                <div className="mb-3 h-px w-full bg-white/15" />
-                <h2 className="text-lg font-semibold text-white">
-                  {item.title}
-                </h2>
-              </div>
-            </motion.button>
-          ))}
-        </div>
-      </div>
+      </section>
 
       <AnimatePresence>
         {activeItem && (
@@ -225,44 +352,76 @@ export default function GalleryClient() {
             role="dialog"
             aria-modal="true"
             aria-label={activeItem.title}
-            onClick={() => setActiveItem(null)}
+            onClick={() => setActiveIndex(null)}
           >
             <button
               type="button"
-              onClick={() => setActiveItem(null)}
-              className="absolute right-5 top-5 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-brand-tertiary"
+              onClick={() => setActiveIndex(null)}
+              className="absolute right-5 top-5 z-10 flex h-11 w-11 items-center justify-center rounded-lg bg-white/10 text-white transition hover:bg-brand-tertiary"
               aria-label="Close gallery preview"
             >
               <X className="h-5 w-5" />
             </button>
+
+            {filteredItems.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    showPrevious();
+                  }}
+                  className="absolute left-4 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-lg bg-white/10 text-white transition hover:bg-brand-tertiary md:flex"
+                  aria-label="View previous gallery item"
+                >
+                  <ChevronLeft className="h-6 w-6" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    showNext();
+                  }}
+                  className="absolute right-4 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-lg bg-white/10 text-white transition hover:bg-brand-tertiary md:flex"
+                  aria-label="View next gallery item"
+                >
+                  <ChevronRight className="h-6 w-6" />
+                </button>
+              </>
+            )}
 
             <motion.div
               initial={{ scale: 0.96, y: 18 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.96, y: 18 }}
               transition={{ duration: 0.25 }}
-              className="relative w-full max-w-6xl overflow-hidden rounded-3xl border border-white/10 bg-brand-primary shadow-2xl"
+              className="relative w-full max-w-6xl overflow-hidden rounded-lg border border-white/10 bg-[#05070a] shadow-2xl"
               onClick={(event) => event.stopPropagation()}
             >
-              {activeItem.mediaType === "video" ? (
-                <video
-                  src={activeItem.image}
-                  className="max-h-[78vh] w-full bg-black"
-                  controls
-                  autoPlay
-                  playsInline
-                />
-              ) : (
-                <img
-                  src={activeItem.image}
-                  alt={activeItem.title}
-                  className="max-h-[78vh] w-full object-contain bg-black"
-                />
-              )}
+              <div className="relative h-[72vh] max-h-[760px] min-h-[360px] bg-black">
+                {activeItem.mediaType === "video" ? (
+                  <video
+                    src={activeItem.image}
+                    className="h-full w-full bg-black object-contain"
+                    controls
+                    autoPlay
+                    playsInline
+                  />
+                ) : (
+                  <Image
+                    src={activeItem.image}
+                    alt={activeItem.title}
+                    fill
+                    sizes="100vw"
+                    className="object-contain"
+                  />
+                )}
+              </div>
 
               <div className="flex flex-col gap-3 border-t border-white/10 bg-white/[0.04] p-5 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-tertiary">
+                  <p className="text-sm font-bold uppercase text-brand-tertiary">
                     {activeItem.category}
                   </p>
                   <h2 className="mt-1 text-2xl font-bold text-white">
@@ -271,7 +430,11 @@ export default function GalleryClient() {
                 </div>
 
                 <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm text-white/70">
-                  <Award className="h-4 w-4 text-brand-tertiary" />
+                  {activeItem.mediaType === "video" ? (
+                    <Film className="h-4 w-4 text-brand-accent" />
+                  ) : (
+                    <Award className="h-4 w-4 text-brand-accent" />
+                  )}
                   Aptech Ibadan
                 </div>
               </div>
@@ -279,6 +442,6 @@ export default function GalleryClient() {
           </motion.div>
         )}
       </AnimatePresence>
-    </section>
+    </>
   );
 }
